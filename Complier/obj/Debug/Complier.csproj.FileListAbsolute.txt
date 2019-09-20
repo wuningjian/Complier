@@ -1,0 +1,7 @@
+C:\ProjectFolder\cs\Complier\Complier\bin\Debug\Complier.exe.config
+C:\ProjectFolder\cs\Complier\Complier\bin\Debug\Complier.exe
+C:\ProjectFolder\cs\Complier\Complier\bin\Debug\Complier.pdb
+C:\ProjectFolder\cs\Complier\Complier\obj\Debug\Complier.csprojAssemblyReference.cache
+C:\ProjectFolder\cs\Complier\Complier\obj\Debug\Complier.csproj.CoreCompileInputs.cache
+C:\ProjectFolder\cs\Complier\Complier\obj\Debug\Complier.exe
+C:\ProjectFolder\cs\Complier\Complier\obj\Debug\Complier.pdb
