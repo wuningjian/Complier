@@ -24,11 +24,11 @@ namespace Complier
         If,
         Else,
 
-        Int,
+        Int,       
 
-        Identifier,     //标识符
+        Identifier,     //标识符 int age = 45; age就是标识符
 
-        IntLiteral,     //整型字面量
+        IntLiteral,     //整型字面量 int age = 45; 45就是字面量
         StringLiteral   //字符串字面量
     }
 }

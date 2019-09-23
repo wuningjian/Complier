@@ -8,48 +8,49 @@ using System.Threading.Tasks;
 // https://github.com/RichardGong/PlayWithCompiler/blob/master/lab/craft
 namespace Complier
 {
+    // 词法分析器
     public class SimpleLexer
     {
-        public static void Main(string[] args)
-        {
-            Console.WriteLine("Hello SimpleLexer");
-            SimpleLexer lexer = new SimpleLexer();
+        //public static void Main(string[] args)
+        //{
+        //    Console.WriteLine("Hello SimpleLexer");
+        //    SimpleLexer lexer = new SimpleLexer();
 
-            //StringReader reader = new StringReader(script);
-            //while (reader.Peek() != -1)
-            //{
-            //    int temp = reader.Read();
-            //    Console.WriteLine(temp);
-            //    Console.WriteLine(Convert.ToChar(temp));
-            //}
+        //    //StringReader reader = new StringReader(script);
+        //    //while (reader.Peek() != -1)
+        //    //{
+        //    //    int temp = reader.Read();
+        //    //    Console.WriteLine(temp);
+        //    //    Console.WriteLine(Convert.ToChar(temp));
+        //    //}
 
-            string script = "int age = 45;";
-            Console.WriteLine("parse : " + script);
-            SimpleTokenReader tokenReader = lexer.tokenize(script);
-            dump(tokenReader);
+        //    string script = "int age = 45;";
+        //    Console.WriteLine("parse : " + script);
+        //    SimpleTokenReader tokenReader = lexer.tokenize(script);
+        //    dump(tokenReader);
 
-            script = "inta age = 45";
-            Console.WriteLine("parse : " + script);
-            tokenReader = lexer.tokenize(script);
-            dump(tokenReader);
+        //    script = "inta age = 45";
+        //    Console.WriteLine("parse : " + script);
+        //    tokenReader = lexer.tokenize(script);
+        //    dump(tokenReader);
 
-            script = "in age = 45";
-            Console.WriteLine("parse : " + script);
-            tokenReader = lexer.tokenize(script);
-            dump(tokenReader);
+        //    script = "in age = 45";
+        //    Console.WriteLine("parse : " + script);
+        //    tokenReader = lexer.tokenize(script);
+        //    dump(tokenReader);
 
-            script = "age >= 45";
-            Console.WriteLine("parse : " + script);
-            tokenReader = lexer.tokenize(script);
-            dump(tokenReader);
+        //    script = "age >= 45";
+        //    Console.WriteLine("parse : " + script);
+        //    tokenReader = lexer.tokenize(script);
+        //    dump(tokenReader);
 
-            script = "age > 45";
-            Console.WriteLine("parse : " + script);
-            tokenReader = lexer.tokenize(script);
-            dump(tokenReader);
+        //    script = "age > 45";
+        //    Console.WriteLine("parse : " + script);
+        //    tokenReader = lexer.tokenize(script);
+        //    dump(tokenReader);
 
-            Console.ReadKey();
-        }
+        //    Console.ReadKey();
+        //}
 
         //下面几个变量是在解析过程中用到的临时变量,如果要优化的话，可以塞到方法里隐藏起来
         private StringWriter tokenText = null;   //临时保存token的文本
