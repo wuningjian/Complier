@@ -11,7 +11,34 @@ namespace Complier
     {
         public static void Main(string[] args)
         {
+            SimpleCalculator calculator = new SimpleCalculator();
 
+            String script = "int a = b + 3;";
+            Console.WriteLine("解析变量声明语句：" + script);
+            SimpleLexer lexer = new SimpleLexer();
+            ITokenReader tokens = lexer.tokenize(script);
+            try
+            {
+                SimpleASTNode node = calculator.intDeclare(tokens);
+                calculator.dumpAST(node, "");
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            script = "2+3*5";
+            Console.WriteLine("\n计算：{0}", script);
+            calculator.evaluate(script);
+
+            script = "2+";
+            Console.WriteLine("\n计算：{0}", script);
+            calculator.evaluate(script);
+
+            script = "2+3+4*2+10+10/5";
+            Console.WriteLine("\n计算：{0}", script);
+            calculator.evaluate(script);
+
+            Console.ReadKey();
         }
 
         private class SimpleASTNode:IASTNode
@@ -61,7 +88,16 @@ namespace Complier
          */
         public void evaluate(string script)
         {
-
+            try
+            {
+                IASTNode tree = parse(script);
+                dumpAST(tree, "");
+                evaluate(tree, "");
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         /**
@@ -72,7 +108,103 @@ namespace Complier
          */
         private int evaluate(IASTNode node, string indent)
         {
-            return 1;
+            int result = 0;
+            Console.WriteLine(indent + "Calculating: " + node.getType());
+            switch (node.getType())
+            {
+                case ASTNodeType.Programm:
+                    foreach(IASTNode child in node.getChildren())
+                    {
+                        result = evaluate(child, indent + "\t");
+                    }
+                    break;
+                case ASTNodeType.Additive:
+                    IASTNode child1 = node.getChildren()[0];
+                    int value1 = evaluate(child1, indent + "\t");
+                    IASTNode child2 = node.getChildren()[1];
+                    int value2 = evaluate(child2, indent + "\t");
+                    if (node.getText() == "+")
+                    {
+                        result = value1 + value2;
+                    }
+                    else
+                    {
+                        result = value1 - value2;
+                    }
+                    break;
+                case ASTNodeType.Multiplicative:
+                    child1 = node.getChildren()[0];
+                    value1 = evaluate(child1, indent + "\t");
+                    child2 = node.getChildren()[1];
+                    value2 = evaluate(child2, indent + "\t");
+                    if (node.getText() == "*")
+                    {
+                        result = value1 * value2;
+                    }
+                    else
+                    {
+                        result = value1 / value2;
+                    }
+                    break;
+                case ASTNodeType.IntLiteral:
+                    result = Convert.ToInt32(node.getText());
+                    break;
+                default:
+                    break;
+            }
+            Console.WriteLine(indent + "结果：" + result);
+            return result;
+        }
+
+        /*
+         * 整型变量声明语句，如：int a; int b = 2*3;
+         * **/
+        private SimpleASTNode intDeclare(ITokenReader tokens)
+        {
+            SimpleASTNode node = null;
+            IToken token = tokens.peek();
+            if (token.getType() == TokenType.Int)
+            {
+                tokens.read();
+                token = tokens.peek();
+                if (token.getType() == TokenType.Identifier)
+                {
+                    token = tokens.read();
+                    node = new SimpleASTNode(ASTNodeType.IntDeclaration, token.getText());
+                    token = tokens.peek();
+                    if (token.getType() == TokenType.Assignment)
+                    {
+                        tokens.read();
+                        SimpleASTNode child = additive(tokens);
+                        if (child != null)
+                        {
+                            node.addChild(child);
+                        }
+                        else
+                        {
+                            throw (new FormatException("'='赋值表达式错误"));
+                        }
+                    }
+                }
+                else
+                {
+                    throw (new FormatException("需要一个变量名"));
+                }
+
+                if (node != null)
+                {
+                    token = tokens.peek();
+                    if (token != null && token.getType() == TokenType.SemiColon)
+                    {
+                        tokens.read();
+                    }
+                    else
+                    {
+                        throw (new FormatException("表达式缺少分号"));
+                    }
+                }
+            }
+            return node;
         }
 
         /*
@@ -88,6 +220,21 @@ namespace Complier
             }
             return node;
         }
+
+        /*
+         * 解析脚本，并返回根节点
+         * @param code
+         */
+        public IASTNode parse(string code)
+        {
+            SimpleLexer lexer = new SimpleLexer();
+            ITokenReader tokens = lexer.tokenize(code);
+
+            IASTNode rootNode = prog(tokens);
+
+            return rootNode;
+        }
+
 
         /*
          * 语法解析：加法表达式
